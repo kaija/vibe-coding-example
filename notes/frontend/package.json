@@ -1,0 +1,38 @@
+{
+  "name": "notes-app-frontend",
+  "version": "1.0.0",
+  "description": "A modern, responsive single-page application for managing personal notes",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve -p 3000 -s .",
+    "dev": "npx serve -p 3000 -s .",
+    "serve": "python3 serve.py",
+    "open": "open http://localhost:3000"
+  },
+  "keywords": [
+    "notes",
+    "spa",
+    "vanilla-js",
+    "frontend",
+    "jwt",
+    "responsive"
+  ],
+  "author": "Notes App",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "."
+  },
+  "homepage": ".",
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

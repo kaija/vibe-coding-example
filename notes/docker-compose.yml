@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15
+    container_name: note-api-postgres
+    environment:
+      POSTGRES_DB: note_api
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d note_api"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - note-api-network
+
+  # Rust Backend API
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: note-api-backend
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/note_api
+      JWT_SECRET: your-super-secret-jwt-key-here-make-it-long-and-random-for-docker
+      ROCKET_PORT: 8000
+      ROCKET_ADDRESS: 0.0.0.0
+      RUST_LOG: debug
+      RUST_BACKTRACE: 1
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - note-api-network
+    restart: unless-stopped
+
+  # Frontend (Static Files served by Nginx)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: note-api-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - note-api-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  note-api-network:
+    driver: bridge

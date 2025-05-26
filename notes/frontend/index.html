@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Authentication Section -->
+    <div id="auth-section" class="auth-section">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h1>Notes App</h1>
+                <p>Manage your notes securely</p>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form" class="auth-form">
+                <h2>Login</h2>
+                <form id="login-form-element">
+                    <div class="form-group">
+                        <label for="login-username">Username</label>
+                        <input type="text" id="login-username" name="username" required minlength="3">
+                        <span class="error-message" id="login-username-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" name="password" required minlength="6">
+                        <span class="error-message" id="login-password-error"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <div class="error-message" id="login-error"></div>
+                </form>
+                <p class="auth-switch">
+                    Don't have an account? 
+                    <a href="#" id="show-register">Register here</a>
+                </p>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-form" class="auth-form hidden">
+                <h2>Register</h2>
+                <form id="register-form-element">
+                    <div class="form-group">
+                        <label for="register-username">Username</label>
+                        <input type="text" id="register-username" name="username" required minlength="3">
+                        <span class="error-message" id="register-username-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" name="password" required minlength="6">
+                        <span class="error-message" id="register-password-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-confirm-password">Confirm Password</label>
+                        <input type="password" id="register-confirm-password" name="confirmPassword" required minlength="6">
+                        <span class="error-message" id="register-confirm-password-error"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                    <div class="error-message" id="register-error"></div>
+                </form>
+                <p class="auth-switch">
+                    Already have an account? 
+                    <a href="#" id="show-login">Login here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application Section -->
+    <div id="app-section" class="app-section hidden">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1>My Notes</h1>
+                <div class="user-info">
+                    <span id="user-welcome">Welcome, <span id="username-display"></span></span>
+                    <button id="logout-btn" class="btn btn-secondary">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Notes Controls -->
+            <div class="notes-controls">
+                <button id="add-note-btn" class="btn btn-primary">
+                    <span class="btn-icon">+</span>
+                    Add New Note
+                </button>
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="Search notes..." class="search-input">
+                </div>
+            </div>
+
+            <!-- Notes Grid -->
+            <div id="notes-container" class="notes-container">
+                <div id="notes-grid" class="notes-grid">
+                    <!-- Notes will be dynamically inserted here -->
+                </div>
+                <div id="no-notes" class="no-notes hidden">
+                    <div class="no-notes-content">
+                        <h3>No notes yet</h3>
+                        <p>Create your first note to get started!</p>
+                        <button class="btn btn-primary" onclick="showAddNoteModal()">
+                            <span class="btn-icon">+</span>
+                            Add Your First Note
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Note Modal -->
+    <div id="note-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Add New Note</h2>
+                <button id="close-modal" class="close-btn">&times;</button>
+            </div>
+            <form id="note-form">
+                <div class="form-group">
+                    <label for="note-title">Title</label>
+                    <input type="text" id="note-title" name="title" required maxlength="200">
+                    <span class="error-message" id="note-title-error"></span>
+                </div>
+                <div class="form-group">
+                    <label for="note-content">Content</label>
+                    <textarea id="note-content" name="content" rows="10" required maxlength="5000"></textarea>
+                    <span class="error-message" id="note-content-error"></span>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="cancel-note" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" id="save-note" class="btn btn-primary">Save Note</button>
+                </div>
+                <div class="error-message" id="note-form-error"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="delete-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Delete Note</h2>
+                <button id="close-delete-modal" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this note? This action cannot be undone.</p>
+                <div class="note-preview">
+                    <h4 id="delete-note-title"></h4>
+                    <p id="delete-note-content"></p>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="cancel-delete" class="btn btn-secondary">Cancel</button>
+                <button type="button" id="confirm-delete" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

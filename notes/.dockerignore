@@ -1,0 +1,64 @@
+# Rust build artifacts
+target/
+# Cargo.lock - needed for Docker builds
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Documentation
+*.md
+docs/
+
+# Git
+.git/
+.gitignore
+
+# Docker files (except Dockerfile)
+docker-compose*.yml
+*.dockerfile
+
+# Scripts (copied individually as needed)
+scripts/verify-setup.sh
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+
+# Node modules (if any)
+node_modules/
+
+# Test files
+tests/
+test/
+
+# Coverage reports
+coverage/
+*.coverage
+
+# Backup files
+*.bak
+*.backup
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Cache directories
+.cache/
