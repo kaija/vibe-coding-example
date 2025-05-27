@@ -23,7 +23,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: postgres://todouser:todopass@10.1.217.104:5432/todoapp
+      DATABASE_URL: postgres://todouser:todopass@postgres:5432/todoapp
       JWT_SECRET: your-super-secret-jwt-key-change-in-production
       RUST_LOG: info
     depends_on:

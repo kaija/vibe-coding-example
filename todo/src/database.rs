@@ -1,4 +1,7 @@
-use sqlx::{PgPool, Row};
+use sqlx::{PgPool, Row, postgres::PgPoolOptions};
+use std::time::Duration;
+use tokio::time::sleep;
+use tracing::error;
 use uuid::Uuid;
 use chrono::{DateTime, Utc};
 use crate::{error::AppError, models::{User, Todo, CreateTodo, UpdateTodo}};
@@ -10,7 +13,30 @@ pub struct Database {
 
 impl Database {
     pub async fn new(database_url: &str) -> Result<Self, AppError> {
-        let pool = PgPool::connect(database_url).await?;
+        let max_retries = 5;
+        let mut attempt = 0;
+        let pool;
+        loop {
+            attempt += 1;
+            let pool_result = PgPoolOptions::new()
+                .max_connections(5)
+                .acquire_timeout(Duration::from_secs(5))
+                .connect(database_url)
+                .await;
+            match pool_result {
+                Ok(p) => {
+                    pool = p;
+                    break;
+                }
+                Err(e) => {
+                    error!("Database pool connection attempt {} failed: {}", attempt, e);
+                    if attempt >= max_retries {
+                        return Err(AppError::Database(format!("Failed to create pool after {} attempts: {}", attempt, e)));
+                    }
+                    sleep(Duration::from_secs(2)).await;
+                }
+            }
+        }
         Ok(Database { pool })
     }
 

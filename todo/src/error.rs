@@ -8,8 +8,11 @@ use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum AppError {
+    #[error(transparent)]
+    Sqlx(#[from] sqlx::Error),
+
     #[error("Database error: {0}")]
-    Database(#[from] sqlx::Error),
+    Database(String),
     
     #[error("Authentication error: {0}")]
     Auth(String),
@@ -36,8 +39,12 @@ pub enum AppError {
 impl IntoResponse for AppError {
     fn into_response(self) -> Response {
         let (status, error_message) = match self {
-            AppError::Database(ref e) => {
-                tracing::error!("Database error: {:?}", e);
+            AppError::Sqlx(ref err) => {
+                tracing::error!("SQLx error: {:?}", err);
+                (StatusCode::INTERNAL_SERVER_ERROR, "Internal server error")
+            }
+            AppError::Database(ref message) => {
+                tracing::error!("Database error: {}", message);
                 (StatusCode::INTERNAL_SERVER_ERROR, "Internal server error")
             }
             AppError::Auth(ref message) => (StatusCode::UNAUTHORIZED, message.as_str()),
