@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Authentication Section -->
+        <div id="auth-section" class="auth-section">
+            <div class="auth-tabs">
+                <button id="login-tab" class="tab-button active" onclick="showLogin()">Login</button>
+                <button id="register-tab" class="tab-button" onclick="showRegister()">Register</button>
+            </div>
+            
+            <!-- Login Form -->
+            <div id="login-form" class="auth-form">
+                <h2>Login</h2>
+                <form id="login-form-element">
+                    <div class="form-group">
+                        <label for="login-username">Username:</label>
+                        <input type="text" id="login-username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password:</label>
+                        <input type="password" id="login-password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+            </div>
+            
+            <!-- Register Form -->
+            <div id="register-form" class="auth-form" style="display: none;">
+                <h2>Register</h2>
+                <form id="register-form-element">
+                    <div class="form-group">
+                        <label for="register-username">Username:</label>
+                        <input type="text" id="register-username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email:</label>
+                        <input type="email" id="register-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password:</label>
+                        <input type="password" id="register-password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Todo Section -->
+        <div id="todo-section" class="todo-section" style="display: none;">
+            <div class="header">
+                <h1>My Todo List</h1>
+                <div class="user-info">
+                    <span id="username-display"></span>
+                    <button id="logout-btn" class="btn btn-secondary">Logout</button>
+                </div>
+            </div>
+
+            <!-- Add Todo Form -->
+            <div class="add-todo-section">
+                <h3>Add New Todo</h3>
+                <form id="add-todo-form">
+                    <div class="form-group">
+                        <label for="todo-title">Title:</label>
+                        <input type="text" id="todo-title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="todo-description">Description:</label>
+                        <textarea id="todo-description" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="todo-scheduled-for">Schedule for (optional):</label>
+                        <input type="datetime-local" id="todo-scheduled-for" name="scheduled_for">
+                        <small class="form-help">Leave empty for unscheduled todos</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Todo</button>
+                </form>
+            </div>
+
+            <!-- Todo List -->
+            <div class="todo-list-section">
+                <h3>Your Todos</h3>
+                <div id="todo-list" class="todo-list">
+                    <!-- Todos will be dynamically loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Error/Success Messages -->
+        <div id="message" class="message" style="display: none;"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
